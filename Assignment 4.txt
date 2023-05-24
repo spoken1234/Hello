@@ -1,0 +1,170 @@
+                     Assignment - 4 
+-------------------------------------------------------
+Q. Write a program to find Network Address by using Binary
+   AND operation with Default Mask.
+
+Program :
+---------
+
+
+import java.util.Scanner;
+
+	class IPAddressConverter {
+		public static void main(String[] args) {
+			Scanner scanner = new Scanner(System.in);
+			System.out.print("Enter an IP address: ");
+			String ipAddress = scanner.nextLine();
+			// Split the IP address into octets
+			String[] octets = ipAddress.split("\\.");
+			//Cnvert each octet to binary and join them together
+			String binaryAddress = "";
+			for (int i = 0; i < 4; i++) {
+				String binaryOctet = Integer.toBinaryString(Integer.parseInt(octets[i]));
+				while (binaryOctet.length() < 8) {
+				binaryOctet = "0" + binaryOctet;
+				}
+			binaryAddress += binaryOctet;
+			}
+			// Determine the class of the IP address
+			String ipClass = "";
+			if (binaryAddress.startsWith("0")) {
+				ipClass = "A";
+			} else if (binaryAddress.startsWith("10")) {
+				ipClass = "B";
+			} else if (binaryAddress.startsWith("110")) {
+				ipClass = "C";
+			} else if (binaryAddress.startsWith("1110")) {
+				ipClass = "D";
+			} else if (binaryAddress.startsWith("1111")) {
+				ipClass = "E";
+			} else {
+				System.out.println("Invalid IP address");
+				System.exit(0);
+			}
+			// Determine the default mask for the IP address class
+			String defaultMask = "";
+			if (ipClass.equals("A")) {
+				defaultMask = "11111111.00000000.00000000.00000000";
+			} else if (ipClass.equals("B")) {
+				defaultMask = "11111111.11111111.00000000.00000000";
+			} else if (ipClass.equals("C")) {
+				defaultMask = "11111111.11111111.11111111.00000000";
+			} else if (ipClass.equals("D")) {
+				System.out.println("Class D address cannot be used for network addressing");
+				System.exit(0);
+			} else if (ipClass.equals("E")) {
+				System.out.println("Class E address cannot be used for network addressing");
+				System.exit(0);
+			}
+			// Split the default mask into octets
+			String[] maskOctets = defaultMask.split("\\.");
+			// Convert each octet of the IP address and mask to binary and do the AND operation
+			String networkAddress = "";
+			for (int i = 0; i < 4; i++) {
+				int ipOctet = Integer.parseInt(octets[i]);
+				int maskOctet = Integer.parseInt(maskOctets[i], 2);
+				int networkOctet = ipOctet & maskOctet;
+				networkAddress += networkOctet + ".";
+			}
+			// Remove the trailing dot from the network address
+			networkAddress = networkAddress.substring(0, networkAddress.length() - 1);
+			System.out.println("IP address: " + ipAddress);
+			System.out.println("Binary address: " + binaryAddress);
+			System.out.println("Class: " + ipClass);
+			System.out.println("Default mask: " + defaultMask);
+			System.out.println("Network address: " + networkAddress);
+			scanner.close();
+		}
+}
+
+============================================================
+                     Assignment - 4a
+-------------------------------------------------------
+Q. Write a program to print the network id and host id 
+   of an ip address.
+
+Program :
+---------
+
+
+import java.util.Scanner;
+class NetworkId{
+	static String findClass(String str){
+		// Calculating first occurrence of '.' in str
+		int index = str.indexOf('.');
+		// First octate in str in decimal form
+		String ipsub = str.substring(0,index);
+		int ip = Integer.parseInt(ipsub);
+		// Class A
+		if (ip>=1 && ip<=126)
+			return "A";
+		// Class B
+		else if (ip>=128 && ip<=191)
+			return "B";
+		// Class C
+		else if (ip>=192 && ip<223)
+			return "C";
+		// Class D
+		else if (ip >=224 && ip<=239)
+			return "D";
+		// Class E
+		else
+			return "E";
+	}
+
+	static void separate(String str, String ipClass){
+		// Initializing network and host empty
+		String network = "", host = "";
+
+		if(ipClass == "A"){
+			int index = str.indexOf('.');
+			network = str.substring(0,index);
+			host = str.substring(index+1,str.length());
+		}else if(ipClass == "B"){
+			//Position of breaking network and HOST id
+			int index = -1;
+			int dot = 2;
+			for(int i=0;i<str.length();i++){
+				if(str.charAt(i)=='.'){
+					dot -=1;
+					if(dot==0){
+						index = i;
+						break;
+					}
+				}
+			}
+			network = str.substring(0,index);
+			host = str.substring(index+1,str.length());
+		}else if(ipClass == "C"){
+			//Position of breaking network and HOST id
+			int index = -1;
+			int dot = 3;
+			for(int i=0;i<str.length();i++){
+				if(str.charAt(i)=='.'){
+					dot -=1;
+					if(dot==0){
+						index = i;
+						break;					
+					}
+				}
+			}
+			network = str.substring(0,index);
+			host = str.substring(index+1,str.length());
+		}else if(ipClass == "D" || ipClass == "E"){
+			System.out.println("In this Class, IP address"+
+			" is not divided into Network and Host IDs");
+			return;
+		}
+		System.out.println("Network ID is "+network);
+		System.out.println("Host ID is "+host);
+	}
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		//Taking IP address as an input
+		System.out.print("Enter an IP address: ");
+		String str = scanner.nextLine();
+		String ipClass = findClass(str);
+		System.out.println("Given IP address belings to Class "+ipClass);
+		separate(str,ipClass);
+	}
+}

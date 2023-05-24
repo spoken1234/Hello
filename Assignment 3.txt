@@ -1,0 +1,48 @@
+                     Assignment - 3
+-------------------------------------------------------
+Q.Write a program to identify the class of a given IP
+Address using Binary Notation ?
+
+Program :
+---------
+
+import java.util.Scanner;
+
+class IdentifyIPClass {
+
+	public static void main(String[] args) {
+		try (Scanner scanner = new Scanner(System.in)) {
+		//Taking IP address as an input
+		System.out.print("Enter an IP address: ");
+		String ipAddress = scanner.nextLine();
+		//Split IP address by dot(.)  
+		String[] octets = ipAddress.split("\\.");
+		String[] binaryOctets = new String[4];
+		//Converts integer into binary  
+		for (int i = 0; i < 4; i++) {
+			binaryOctets[i] = Integer.toBinaryString(Integer.parseInt(octets[i]));
+			while (binaryOctets[i].length() < 8) {
+				binaryOctets[i] = "0" + binaryOctets[i];
+			}
+		}
+		String binaryAddress = String.join("", binaryOctets);
+		//Condition to check the class of IP address
+		if (binaryAddress.startsWith("0")) {
+			System.out.println("This is a Class A IP address.");
+		} else if (binaryAddress.startsWith("10")) {
+			System.out.println("This is a Class B IP address.");
+		} else if (binaryAddress.startsWith("110")) {
+			System.out.println("This is a Class C IP address.");
+		} else if (binaryAddress.startsWith("1110")) {
+			System.out.println("This is a Class D IP address.");
+		} else if (binaryAddress.startsWith("1111")) {
+			System.out.println("This is a Class E IP address.");
+		} else {
+			System.out.println("Invalid IP address.");
+		}
+		System.out.println("IP Address in Binary Notation: " + binaryAddress);
+		}
+	}
+}
+
+======================================================

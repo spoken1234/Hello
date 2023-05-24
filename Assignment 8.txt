@@ -1,0 +1,53 @@
+                     Assignment - 8 
+-------------------------------------------------------
+Q. Write a program to retrive date and time using TCP.
+
+Program :
+---------
+=======================================================
+			Code for dateServer
+=======================================================
+import java.net.*;
+import java.io.*;
+import java.util.*;
+
+class dateServer
+{
+
+        public static void main(String args[]) throws Exception {
+            ServerSocket s = new ServerSocket(8000);
+            while (true) {
+                System.out.println("Waiting for connection....");
+                Socket soc = s.accept();
+                DataOutputStream out = new DataOutputStream(soc.getOutputStream());
+                out.writeBytes("Server Date:" + (new Date()).toString() + "\n");
+
+                out.close();
+                soc.close();
+            }
+        }
+}
+
+=======================================================
+			Code for dateClient
+=======================================================
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+class dateClient
+{
+    public static void main(String args[]) throws Exception
+    {
+        Socket soc=new Socket("127.0.0.1", 8000);        
+	
+	Scanner sc = new Scanner(soc.getInputStream());
+
+        BufferedReader in=new BufferedReader(new InputStreamReader(soc.getInputStream()  ));
+        System.out.println(sc.nextLine());
+
+	soc.close();
+    }    
+}
+========================================================

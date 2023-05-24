@@ -1,0 +1,7 @@
+                     Assignment - 5
+-------------------------------------------------------
+Q. Write a program to generate CRC of a given binary 
+   data and divisor.
+
+Program :
+---------

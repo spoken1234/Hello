@@ -1,0 +1,92 @@
+                     Assignment - 7 
+-------------------------------------------------------
+Q. Implement Client Server Socket to send and receive data
+   between client and server using UDP protocol.
+
+Program :
+---------
+=======================================================
+			Code for UDPServer
+=======================================================
+
+package UDPServerSocket;
+
+import java.io.*;
+import java.net.*;
+
+class UDPServer {
+    public static void main(String[] args) throws IOException {
+        DatagramSocket serverSocket = new DatagramSocket(9876);
+        byte[] receiveData = new byte[1024];
+        byte[] sendData= new byte[1024];
+
+        System.out.println("Server is Running....");
+
+        while(true)
+        {
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
+            serverSocket.receive(receivePacket);
+            // Get the actual length of the received data
+            int receiveLength = receivePacket.getLength();
+            String sentence = new String(receivePacket.getData(), 0, receiveLength);
+
+            System.out.println("Received from Client : "+sentence);
+
+            InetAddress IPAddress = receivePacket.getAddress();
+            int port = receivePacket.getPort();
+
+            String capitalizedSentence = sentence.toUpperCase();
+            sendData = capitalizedSentence.getBytes();
+
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+            serverSocket.send(sendPacket);
+
+            System.out.println("Send to Client : "+capitalizedSentence);
+        }
+    }
+}
+
+=======================================================
+			Code for UDPClient
+=======================================================
+
+package UDPServerSocket;
+
+import java.io.*;
+import java.net.*;
+
+class UDPClient {
+    public static void main(String[] args) throws IOException {
+        BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+        DatagramSocket clientSocket = new DatagramSocket();
+        InetAddress IPAddress = InetAddress.getByName("LOCALHOST");
+
+        byte[] sendData = new byte[1024];
+        byte[] receiveData = new byte[1024];
+
+        System.out.print("Enter Message : ");
+        String sentence = inFromUser.readLine();
+
+        sendData = sentence.getBytes();
+
+        System.out.println("Send to Server : "+sentence);
+
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+
+        clientSocket.send(sendPacket);
+
+        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        clientSocket.receive(receivePacket);
+
+        // Get the actual length of the received data
+        int receiveLength = receivePacket.getLength();
+
+        String modifiedSentence = new String(receivePacket.getData(), 0, receiveLength);
+        System.out.println("Received from Server : " + modifiedSentence);
+
+        clientSocket.close();
+    }
+}
+
+==============================================

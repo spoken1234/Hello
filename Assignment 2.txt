@@ -1,0 +1,15 @@
+                     Assignment - 2 
+-------------------------------------------------------
+Opening Interface Configuration in Ubuntu
+
+> ifconfig
+
+
+
+
+
+
+-------------------------------------------------------
+Ping Ip Address in Ubuntu
+
+> ping google.com
